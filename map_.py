@@ -1,6 +1,6 @@
 import pygame
-from actors import Player
-from global_class import glob
+from actors import Player, Goomba
+from global_class import glob, actor_list, dead_list
 
 class Map:
     def __init__(self, _map):
@@ -14,4 +14,6 @@ class Map:
         for y, row in enumerate(self.map):
             for x, col in enumerate(row):
                 if col == "p":
-                    glob.actor_list.append(Player(x, y))
+                    actor_list.list.append(Player(x, y))
+                if col == "e":
+                    actor_list.list.append(Goomba(x, y))
