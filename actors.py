@@ -117,7 +117,7 @@ class Player(Actor):
             self.xspeed -= 0.02
         
         if keyboard.is_pressed(pygame.K_z) and self.contacts[0] == True:
-            self.yspeed = -0.3
+            self.yspeed = -0.36
 
         if self.contacts[0] == True and abs(self.xspeed) < 0.2: self.dashes = 1
 
@@ -126,9 +126,9 @@ class Player(Actor):
             
             if self.dashes > 0: self.dashes -= 1
         
-        self.yspeed += 0.01
+        self.yspeed += 0.015
         
-        self.xspeed *= 0.8
+        self.xspeed *= 0.85
 
         self.x += self.xspeed
         self.y += self.yspeed
