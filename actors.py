@@ -2,6 +2,7 @@ import pygame
 import math
 from global_class import glob, actor_list, dead_list
 from keyboard_ import keyboard
+import camera
 
 class Actor:
     def __init__(self, x, y):
@@ -93,6 +94,9 @@ class Actor:
         for _ in range(4):
             if len(self.states) > 0: self.x, self.y, self.xspeed, self.yspeed, self.contacts, self.facing = self.states.pop()
 
+    def draw_with_camera(self, _camera):
+        pygame.draw.rect(glob.screen, glob.RED, pygame.Rect(glob.active_camera.get_screen_coordinates(self.x, self.y)[0]*16, glob.active_camera.get_screen_coordinates(self.x, self.y)[1]*16, 16, 16))
+
 class Player(Actor):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -104,6 +108,9 @@ class Player(Actor):
         self.contacts = [False, False, False, False]
         self.facing = 1
         self.dashes = 1
+
+        self.camera = camera.Camera(self, 0.5, 0.5)
+        self.camera.on = True
         
 
     def update(self):

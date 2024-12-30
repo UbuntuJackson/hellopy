@@ -8,8 +8,12 @@ class Map:
     def draw_map(self):
         for y, row in enumerate(self.map):
             for x, col in enumerate(row):
-                
-                if col == "x": pygame.draw.rect(glob.screen, glob.YELLOW, pygame.Rect(x*16, y*16, 16, 16))
+                if glob.active_camera.on == False:
+                    if col == "x": pygame.draw.rect(glob.screen, glob.YELLOW, pygame.Rect(x*16, y*16, 16, 16))
+                else:
+                    loc_camera_coord = glob.active_camera.get_screen_coordinates(x,y)
+
+                    if col == "x": pygame.draw.rect(glob.screen, glob.YELLOW, pygame.Rect(loc_camera_coord[0]*16, loc_camera_coord[1]*16, 16, 16))
     def load_actors(self):
         for y, row in enumerate(self.map):
             for x, col in enumerate(row):
