@@ -54,6 +54,10 @@ class Global:
             "........................x.................xx....e...x.......xx................x.",
             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.",
         ]
+
+        self.player_sprite = pygame.image.load("rooster.png")
+        self.player_sprite_left = pygame.image.load("rooster_flip.png")
+        self.player_sprite_idle = pygame.image.load("rooster_idle.png")
     
 class ActorList:
     def __init__(self):

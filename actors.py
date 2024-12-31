@@ -3,6 +3,7 @@ import math
 from global_class import glob, actor_list, dead_list
 from keyboard_ import keyboard
 import camera
+import sprite_reference
 
 class Actor:
     def __init__(self, x, y):
@@ -14,6 +15,7 @@ class Actor:
         self.contacts = [False, False, False, False]
         self.facing = 1
         self.states = []
+        self.frame = 0
     def collision(self):
         for y, row in enumerate(glob.map.map):
             for x, col in enumerate(row):
@@ -94,8 +96,21 @@ class Actor:
         for _ in range(4):
             if len(self.states) > 0: self.x, self.y, self.xspeed, self.yspeed, self.contacts, self.facing = self.states.pop()
 
+    def draw_sprite_with_camera(self, _sprite_reference, _camera, _frame = None):
+
+        self.frame += 0.3
+
+        if _frame != None:
+            self.frame = _frame
+
+        print(_sprite_reference.width*self.frame%4)
+        pos = _camera.get_screen_coordinates(self.x, self.y)
+        glob.screen.blit(_sprite_reference.sprite_sheet_reference, [pos[0]*16 + _sprite_reference.local_x*16, pos[1]*16 + _sprite_reference.local_y*16],
+                         pygame.Rect(_sprite_reference.width*math.floor(self.frame%4),0,_sprite_reference.width,_sprite_reference.height))
+    
     def draw_with_camera(self, _camera):
         pygame.draw.rect(glob.screen, glob.RED, pygame.Rect(glob.active_camera.get_screen_coordinates(self.x, self.y)[0]*16, glob.active_camera.get_screen_coordinates(self.x, self.y)[1]*16, 16, 16))
+    
 
 class Player(Actor):
     def __init__(self, x, y):
@@ -111,6 +126,7 @@ class Player(Actor):
 
         self.camera = camera.Camera(self, 0.5, 0.5)
         self.camera.on = True
+        self.facing_right = True
         
 
     def update(self):
@@ -140,6 +156,11 @@ class Player(Actor):
         self.x += self.xspeed
         self.y += self.yspeed
 
+        if self.xspeed > 0.0:
+            self.facing_right = True
+        if self.xspeed < 0.0:
+            self.facing_right = False
+
         self.contacts = [False, False, False, False]
 
         self.collision()
@@ -159,6 +180,15 @@ class Player(Actor):
 
     def draw(self):
         pygame.draw.rect(glob.screen, glob.GREEN, pygame.Rect(self.x*16, self.y*16, 16, 16))
+
+    def draw_with_camera(self, _camera):
+        if(math.fabs(self.xspeed) > 0.01):
+            if not self.facing_right:
+                self.draw_sprite_with_camera(sprite_reference.SpriteReference(glob.player_sprite, 0,-13.0/16.0, 22,28, 4), _camera)
+            else:
+                self.draw_sprite_with_camera(sprite_reference.SpriteReference(glob.player_sprite_left, 0,-13.0/16.0, 22,28, 4), _camera)
+        else:
+            self.draw_sprite_with_camera(sprite_reference.SpriteReference(glob.player_sprite_idle, 0,-13.0/16.0, 22,28, 1), _camera, int(not self.facing_right))
 
 class Goomba(Actor):
     def __init__(self, x, y):
